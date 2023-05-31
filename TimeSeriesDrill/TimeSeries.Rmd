@@ -1,0 +1,98 @@
+---
+title: "Time Series"
+author: "Mark Biegert"
+date: "5/31/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#Load the required libraries 
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(forecast)
+library(lubridate)
+```
+
+```{r}
+#Load the dataset
+daily_sales <- read_excel("Daily Vitamin Sales.xlsx")
+
+
+head(daily_sales)
+
+```
+
+```{r}
+#Remove redundant columns and rename sales units column
+daily_sales <- daily_sales[,c(8,4)]
+head(daily_sales)
+print(names(daily_sales))
+names(daily_sales)[names(daily_sales) == "Units sold - packs"] <- "sales_units"
+```
+
+
+```{r}
+#sum by month to get monthly data rather than daily
+daily_sales <- daily_sales %>% 
+  mutate(month = floor_date(daily_sales$Date, "month"))
+
+monthly_sales <- daily_sales %>% 
+  group_by(month) %>% 
+  summarise(total = sum(sales_units))
+
+head(monthly_sales)
+
+```
+
+```{r}
+#plot the data to see visually
+data.frame(sapply(monthly_sales,class))
+ggplot(monthly_sales, aes(x = as.Date(month), y = total)) + 
+  geom_line() + scale_x_date(date_breaks = "2 months", date_labels ="%b-%Y")+
+  theme_light()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# https://stackoverflow.com/questions/41815365/error-invalid-input-date-trans-works-with-objects-of-class-date-only
+```
+```{r}
+#convert to time series object and check the individual components 
+monthly_sales_ts <- ts(monthly_sales$total, frequency=12, start=c(2019,7))
+plot(decompose(monthly_sales_ts))
+```
+
+```{r}
+#fit a naive model
+fit_naive <- naive(monthly_sales_ts, h=12)
+print(summary(fit_naive))
+plot(fit_naive)
+checkresiduals(fit_naive)
+```
+
+```{r}
+#fit a seasonal naive model
+fit_snaive <- snaive(monthly_sales_ts, h=12)
+print(summary(fit_snaive))
+plot(fit_snaive)
+checkresiduals(fit_snaive)
+
+```
+
+```{r}
+#fit 3 ets models AAA, ZZZ, MAM
+# Does not run, hangs
+fit_ets1 <- ets(monthly_sales_ts, model = "AAA")
+fit_ets2 <- ets(monthy_sales_ts, mode = "ZZZ")
+fit_ets3 <- ets(monthy_sales_ts, mode = "MAM")
+
+print(summary(fit_ets1))
+print(summary(fit_ets2))
+print(summary(fit_ets3))
+```
+
+```{r}
+#fit the Arima 
+fit_arima <- auto.arima(monthly_sales_ts, d=1, D=1, stepwise = FALSE, approximation = FALSE, trace = TRUE)
+print(summary(fit_arima))
+checkresiduals(fit_arima)
+```
+
