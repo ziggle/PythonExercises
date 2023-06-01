@@ -1,0 +1,25 @@
+---
+title: "Iris"
+author: "Mark Biegert"
+date: "6/1/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# The datasets package needs to be loaded to access our data 
+# For a full list of these datasets, type library(help = "datasets")
+library(datasets)
+data(iris)
+summary(iris)
+```
+```{r}
+library(ggplot2)
+p <- ggplot(iris, aes(Sepal.Width, Sepal.Length)) +    
+  geom_point(aes(color = Species)) +   
+  theme_light() 
+
+library(patchwork)
+
+p + (p+ aes(Petal.Width, Petal.Length))
+```
+
