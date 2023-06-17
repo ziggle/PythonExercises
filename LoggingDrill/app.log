@@ -1,0 +1,7 @@
+my_test_logger:CRITICAL:2023-06-17 18:15:45,389:this is a critical message
+my_test_logger:ERROR:2023-06-17 18:15:45,389:this is a error message
+my_test_logger:WARNING:2023-06-17 18:15:45,389:this is a warning message
+my_test_logger:INFO:2023-06-17 18:15:45,390:this is a info message
+my_test_logger:DEBUG:2023-06-17 18:15:45,390:this is a debug message
+my_test_logger:DEBUG:2023-06-17 18:15:45,390:this is a debug message1
+my_test_logger:DEBUG:2023-06-17 18:15:45,390:this is a debug message2
