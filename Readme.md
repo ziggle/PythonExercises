@@ -17,3 +17,11 @@ This is just a simple Matplotlib chart. Just for practice.
 ### Tupes2Columns
 
 A twitter person had an interesting data frame with a column of tuples and they needed to take the tuples and break them up into columns.
+
+## Questions
+
+3. What does Python's record linkage library do?
+
+The Python Record Linkage toolkit is a library to link records in or between data sources. The toolkit provides most of the tools needed for record linkage and deduplication. The package contains indexing methods, functions to compare records and classifiers.
+
+https://pypi.org/project/recordlinkage/
